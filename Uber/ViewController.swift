@@ -43,8 +43,19 @@ class ViewController: UIViewController {
                     if error != nil {
                         self.displayAlert(title: "Error", message: error!.localizedDescription)
                     } else {
-                        print("Sign Up Successful")
-                        self.performSegue(withIdentifier: "riderSegue", sender: nil)
+                        
+                        if self.riderDriverSwitch.isOn {
+                            let request = Auth.auth().currentUser?.createProfileChangeRequest()
+                            request?.displayName = "Driver"
+                            request?.commitChanges(completion: nil)
+                            self.performSegue(withIdentifier: "driverSegue", sender: nil)
+                        } else {
+                            let request = Auth.auth().currentUser?.createProfileChangeRequest()
+                            request?.displayName = "Rider"
+                            request?.commitChanges(completion: nil)
+                            self.performSegue(withIdentifier: "riderSegue", sender: nil)
+                        }
+                        
                     }
                 }
             } else {
@@ -53,9 +64,16 @@ class ViewController: UIViewController {
                     if error != nil {
                         self.displayAlert(title: "Error", message: error!.localizedDescription)
                     } else {
-                        print("Login Successful")
-                        self.performSegue(withIdentifier: "riderSegue", sender: nil)
+                        
+                        if user?.user.displayName == "Driver" {
+                            //DRIVER
+                            self.performSegue(withIdentifier: "driverSegue", sender: nil)
+                        } else {
+                            //RIDER
+                            self.performSegue(withIdentifier: "riderSegue", sender: nil)
+                        }
                     }
+                    
                 }
             }
         }
@@ -74,7 +92,7 @@ class ViewController: UIViewController {
             riderLabel.isHidden = true
             driverLabel.isHidden = true
             riderDriverSwitch.isHidden = true
-            
+
             topButton.setTitle("Login", for: .normal)
             bottomButton.setTitle("Switch to Sign Up", for: .normal)
             signUpMode = false
@@ -82,7 +100,7 @@ class ViewController: UIViewController {
             riderLabel.isHidden = false
             driverLabel.isHidden = false
             riderDriverSwitch.isHidden = false
-            
+
             topButton.setTitle("Sign Up", for: .normal)
             bottomButton.setTitle("Switch to Login", for: .normal)
             signUpMode = true
