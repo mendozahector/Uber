@@ -242,6 +242,7 @@
                     </view>
                     <connections>
                         <outlet property="map" destination="AW5-Na-76T" id="BoE-NG-db1"/>
+                        <outlet property="requestButton" destination="ORe-d4-FCp" id="Zpg-3O-35c"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BAv-Ai-Uah" userLabel="First Responder" sceneMemberID="firstResponder"/>

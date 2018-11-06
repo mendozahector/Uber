@@ -26,7 +26,18 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if let user = Auth.auth().currentUser {
+            if user.displayName == "Driver" {
+                //DRIVER
+                self.performSegue(withIdentifier: "driverSegue", sender: nil)
+            } else {
+                //RIDER
+                self.performSegue(withIdentifier: "riderSegue", sender: nil)
+            }
+        }
     }
 
     @IBAction func topTapped(_ sender: UIButton) {

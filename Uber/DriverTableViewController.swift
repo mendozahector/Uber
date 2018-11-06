@@ -26,19 +26,37 @@ class DriverTableViewController: UITableViewController, CLLocationManagerDelegat
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         
-        databaseRef.child("RideRequests").observe(.childAdded) { (DataSnapshot) in
-            self.rideRequests.append(DataSnapshot)
-            self.tableView.reloadData()
+        databaseRef.child("RideRequests").observe(.childAdded) { (snapshot) in
+            if let rideRequestDictionary = snapshot.value as? [String: AnyObject] {
+                
+                if let driverEmail = rideRequestDictionary["driverEmail"] as? String {
+                    if driverEmail == Auth.auth().currentUser?.email {
+                        self.performSegue(withIdentifier: "requestSegue", sender: snapshot)
+                    }
+                } else {
+                    self.rideRequests.append(snapshot)
+                    self.tableView.reloadData()
+                }
+                
+            }
+            
         }
         
         databaseRef.child("RideRequests").observe(.childChanged) { (snapshot) in
+            var dataExists = false
             
             for index in 0..<self.rideRequests.count {
                 if self.rideRequests[index].key == snapshot.key {
+                    dataExists = true
                     self.rideRequests[index] = snapshot
                     self.tableView.reloadData()
                     break
                 }
+            }
+            
+            if !dataExists {
+                self.rideRequests.append(snapshot)
+                self.tableView.reloadData()
             }
             
         }
@@ -122,7 +140,7 @@ class DriverTableViewController: UITableViewController, CLLocationManagerDelegat
                                 destinationVC.requestEmail = email
                                 destinationVC.requestLocation = location
                                 destinationVC.driverLocation = driverLocation
-                                
+                                destinationVC.driverEmail = (Auth.auth().currentUser?.email)!
                             }
                         }
                     }
@@ -133,5 +151,6 @@ class DriverTableViewController: UITableViewController, CLLocationManagerDelegat
             
         }
     }
+    
 
 }
