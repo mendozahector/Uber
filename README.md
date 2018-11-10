@@ -12,6 +12,7 @@ Using Apple's MapKit to create an interactive Uber demo app.
 * CocoaPods(SVProgressHUD)
 * Firebase Realtime Database
 * MapKit Apple Framework
+* Core Location
 
 
 ## Finished App
